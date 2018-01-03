@@ -4,6 +4,10 @@
 
 ![](./snek.jpg)
 
+## Requirements
+
+* Python v2.7
+
 ### Imports the `numpy` Python module and does some math
 
 ```
