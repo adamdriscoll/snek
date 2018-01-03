@@ -49,12 +49,13 @@ function Import-PythonModule {
     [Python.Runtime.Py]::Import($Name)
 }
 
-function Test-Python {
-    Use-Python {
-        $np = Import-PythonModule "numpy"
-        [float]$np.cos($np.pi * 2)
-    
-        [float]$np.sin(5)
-        [float]($np.cos(5) + $np.sin(5))
-    }
+function Install-PythonModule {
+    param(
+        $Name
+    )
+
+    $item = Get-Item "hklm:\SOFTWARE\Python\PythonCore\2.7\InstallPath"
+    $pythonPath = $item.GetValue("")
+
+    Invoke-Expression "$($pythonPath)Scripts\pip.exe install $name"
 }

@@ -8,6 +8,13 @@
 
 * Python v2.7
 
+## Functions 
+
+* Use-Python
+* Load-Python
+* Import-PythonModule
+* Install-PythonModule
+
 ### Imports the `numpy` Python module and does some math
 
 ```
