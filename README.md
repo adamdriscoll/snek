@@ -2,6 +2,8 @@
 
 ## PowerShell wrapper around [Python for .NET ](https://github.com/pythonnet/pythonnet) to invoke Python from PowerShell
 
+![](./snek.jpg)
+
 ### Imports the `numpy` Python module and does some math
 
 ```
