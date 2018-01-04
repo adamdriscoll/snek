@@ -6,7 +6,7 @@
 
 ## Requirements
 
-* Python v2.7
+* Python v2.7 or v3.6
 
 ## Functions 
 
