@@ -11,7 +11,7 @@
 ## Functions 
 
 * Use-Python
-* Load-Python
+* Import-PythonRuntime
 * Import-PythonModule
 * Install-PythonModule
 
