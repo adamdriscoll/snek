@@ -11,6 +11,7 @@
 ## Functions 
 
 * Use-Python
+* Invoke-Python
 * Import-PythonRuntime
 * Import-PythonModule
 * Install-PythonModule
@@ -24,7 +25,7 @@ Use-Python {
 
     [float]$np.sin(5)
     [float]($np.cos(5) + $np.sin(5))
-}
+} -Version v3
 ```
 
 Output

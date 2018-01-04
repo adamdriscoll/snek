@@ -15,18 +15,18 @@ function Import-PythonRuntime {
         $arch = "x64"
     }
 
-    $Runtime = Join-Path (Join-Path (Join-Path (Join-Path $PSScriptRoot "binaries") $arch) $FolderPath) "Python.Runtime.dll"
-
+    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "binaries", $arch, $FolderPath, "Python.Runtime.dll")
     [System.Reflection.Assembly]::LoadFrom($Runtime) | Out-Null
-    
 }
 
 function Use-Python {
     param(
-        [ScriptBlock]$Script
+        [ScriptBlock]$Script,
+        [ValidateSet("v2", "v3")]
+        $Version = "v2"
     )
 
-    Import-PythonRuntime
+    Import-PythonRuntime -Version $Version
 
     $runtime = $null
     try 
@@ -49,13 +49,23 @@ function Import-PythonModule {
     [Python.Runtime.Py]::Import($Name)
 }
 
-function Install-PythonModule {
+function Invoke-Python {
     param(
-        $Name
+        $Code
     )
 
-    $item = Get-Item "hklm:\SOFTWARE\Python\PythonCore\2.7\InstallPath"
-    $pythonPath = $item.GetValue("")
+    [Python.Runtime.PythonEngine]::Exec($Code)
+}
 
-    Invoke-Expression "$($pythonPath)Scripts\pip.exe install $name"
+function Install-PythonModule {
+    param(
+        $Name,
+        [ValidateSet("v2", "v3")]
+        $Version = "v2"
+    )
+
+    Use-Python -Version $Version -Script {
+        Invoke-Python -Code "import pip 
+pip.main([`"install`", `"$Name`"])"
+    }
 }
