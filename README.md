@@ -4,6 +4,12 @@
 
 ![](./snek.jpg)
 
+## Install snek
+
+```
+Install-Module snek
+```
+
 ## Requirements
 
 * Python v2.7 or v3.6
