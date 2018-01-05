@@ -1,4 +1,4 @@
-# Snek
+# [Snek](https://www.reddit.com/r/Snek/)
 
 ## PowerShell wrapper around [Python for .NET ](https://github.com/pythonnet/pythonnet) to invoke Python from PowerShell
 
