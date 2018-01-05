@@ -16,6 +16,16 @@
 * Import-PythonModule
 * Install-PythonModule
 
+### Invoke A Python Code string 
+
+```
+PS > Use-Python { 
+    Invoke-Python -Code "print('hi!')" 
+}
+    
+hi!
+```
+
 ### Imports the `numpy` Python module and does some math
 
 ```
