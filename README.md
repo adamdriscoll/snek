@@ -16,7 +16,7 @@
 * Import-PythonModule
 * Install-PythonModule
 
-### Invoke A Python Code string 
+### Invoke Python Code
 
 ```
 PS > Use-Python { 
@@ -27,6 +27,8 @@ hi!
 ```
 
 ### Imports the `numpy` Python module and does some math
+
+Access methods of modules directly! 
 
 ```
 Use-Python {
