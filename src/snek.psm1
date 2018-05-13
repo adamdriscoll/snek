@@ -65,7 +65,7 @@ function Install-PythonModule {
     )
 
     Use-Python -Version $Version -Script {
-        Invoke-Python -Code "import pip 
-pip.main([`"install`", `"$Name`"])"
+        Invoke-Python -Code "import pip._internal
+pip._internal.main([`"install`", `"$Name`"])"
     }
 }
