@@ -57,8 +57,9 @@ function Invoke-Python {
     [Python.Runtime.PythonEngine]::Exec($Code)
 }
 
-function Install-PythonModule {
+function Manage-PythonModule {
     param(
+        $Action,
         $Name,
         [ValidateSet("v2", "v3")]
         $Version = "v3"
@@ -66,6 +67,6 @@ function Install-PythonModule {
 
     Use-Python -Version $Version -Script {
         Invoke-Python -Code "import pip._internal
-pip._internal.main([`"install`", `"$Name`"])"
+pip._internal.main([`"$Action`", `"$Name`"])"
     }
 }
