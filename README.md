@@ -4,15 +4,19 @@
 
 ![](./snek.jpg)
 
-## Install snek
+## Install snek 
 
 ```
 Install-Module snek
 ```
+- this forked repo defaults to python 3
+- function `Install-PythonModule` has been changed to `Manage-PythonModule` to enable all the pip commands
+- to use this repo, after doing an `Install-Module snek` need to replace snek.psd1 and snek.psm1 in `C:\Program Files\WindowsPowerShell\Modules\snek\<version>` with the snek.psd1 and snek.psm1 in this repo.
 
 ## Requirements
 
-* Python v2.7 or v3.6
+* Python v2.7 or v3.6 (defaults to python 3.6)
+* for Python v2.7 just add -Version v2
 
 ## Functions 
 
@@ -22,12 +26,22 @@ Install-Module snek
 * Import-PythonModule
 * Manage-PythonModule
 
-### Invoke Python Code
+### Invoke Python Code (v3.6)
 
 ```
 PS > Use-Python { 
     Invoke-Python -Code "print('hi!')" 
 }
+    
+hi!
+```
+
+### Invoke Python Code (v2.7)
+
+```
+PS > Use-Python { 
+    Invoke-Python -Code "print('hi!')" 
+} -Version v2
     
 hi!
 ```
