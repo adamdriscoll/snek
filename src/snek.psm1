@@ -57,7 +57,7 @@ function Invoke-Python {
     [Python.Runtime.PythonEngine]::Exec($Code)
 }
 
-function Manage-PythonModule {
+function Set-PythonModule {
     param(
         $Action,
         $Name,

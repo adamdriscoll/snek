@@ -9,9 +9,6 @@
 ```
 Install-Module snek
 ```
-- this forked repo defaults to python 3
-- function `Install-PythonModule` has been changed to `Manage-PythonModule` to enable all the pip commands
-- to use this repo, after doing an `Install-Module snek` need to replace snek.psd1 and snek.psm1 in `C:\Program Files\WindowsPowerShell\Modules\snek\<version>` with the snek.psd1 and snek.psm1 in this repo.
 
 ## Requirements
 
@@ -24,7 +21,7 @@ Install-Module snek
 * Invoke-Python
 * Import-PythonRuntime
 * Import-PythonModule
-* Manage-PythonModule
+* Set-PythonModule
 
 ### Invoke Python Code (v3.6)
 
@@ -70,14 +67,14 @@ Output
 
 ### Manage pip
 
-Format is `Manage-PythonModule <pip command> <package>`
+Format is `Set-PythonModule <pip command> <package>`
 
 ```
-PS> Manage-PythonModule install requests
+PS> Set-PythonModule install requests
 ```
 
 Or similarly:
 
 ```
-PS> Manage-PythonModule uninstall requests
+PS> Set-PythonModule uninstall requests
 ```
