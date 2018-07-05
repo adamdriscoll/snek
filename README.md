@@ -4,7 +4,7 @@
 
 ![](./snek.jpg)
 
-## Install snek
+## Install snek 
 
 ```
 Install-Module snek
@@ -12,7 +12,8 @@ Install-Module snek
 
 ## Requirements
 
-* Python v2.7 or v3.6
+* Python v2.7 or v3.6 (defaults to python 3.6)
+* for Python v2.7 just add -Version v2
 
 ## Functions 
 
@@ -20,14 +21,24 @@ Install-Module snek
 * Invoke-Python
 * Import-PythonRuntime
 * Import-PythonModule
-* Install-PythonModule
+* Set-PythonModule
 
-### Invoke Python Code
+### Invoke Python Code (v3.6)
 
 ```
 PS > Use-Python { 
     Invoke-Python -Code "print('hi!')" 
 }
+    
+hi!
+```
+
+### Invoke Python Code (v2.7)
+
+```
+PS > Use-Python { 
+    Invoke-Python -Code "print('hi!')" 
+} -Version v2
     
 hi!
 ```
@@ -54,12 +65,16 @@ Output
 -0.6752621
 ```
 
-### Install a new pip
+### Manage pip
+
+Format is `Set-PythonModule <pip command> <package>`
 
 ```
-PS> Install-PythonModule virtualenv-15.1.0-py2.py3-none-any.whl
+PS> Set-PythonModule install requests
+```
 
-Requirement 'virtualenv-15.1.0-py2.py3-none-any.whl' looks like a filename, but the file does not exist
-Requirement already satisfied: virtualenv==15.1.0 from file:///C:/Users/Adam/virtualenv-15.1.0-py2.py3-none-any
-:\python27\lib\site-packages
+Or similarly:
+
+```
+PS> Set-PythonModule uninstall requests
 ```

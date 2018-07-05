@@ -2,7 +2,7 @@
 function Import-PythonRuntime {
     param(
         [ValidateSet("v2", "v3")]
-        $Version = "v2"
+        $Version = "v3"
         )
 
     $FolderPath = "v27";
@@ -23,7 +23,7 @@ function Use-Python {
     param(
         [ScriptBlock]$Script,
         [ValidateSet("v2", "v3")]
-        $Version = "v2"
+        $Version = "v3"
     )
 
     Import-PythonRuntime -Version $Version
@@ -57,15 +57,16 @@ function Invoke-Python {
     [Python.Runtime.PythonEngine]::Exec($Code)
 }
 
-function Install-PythonModule {
+function Set-PythonModule {
     param(
+        $Action,
         $Name,
         [ValidateSet("v2", "v3")]
-        $Version = "v2"
+        $Version = "v3"
     )
 
     Use-Python -Version $Version -Script {
-        Invoke-Python -Code "import pip 
-pip.main([`"install`", `"$Name`"])"
+        Invoke-Python -Code "import pip._internal
+pip._internal.main([`"$Action`", `"$Name`"])"
     }
 }
