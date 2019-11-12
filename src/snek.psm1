@@ -1,29 +1,25 @@
 
 function Import-PythonRuntime {
     param(
-        [ValidateSet("v2", "v3")]
-        $Version = "v3"
+        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
+        $Version = "v3.7"
         )
 
-    $FolderPath = "v27";
-    if ($Version -eq "v3") {
-        $FolderPath = "v36";
+    $Architecture = 'x64'
+    if ([IntPtr]::Size -eq 4)
+    {
+        $Architecture = 'x86'
     }
 
-    $arch = "x86"
-    if ([IntPtr]::Size -eq 8) {
-        $arch = "x64"
-    }
-
-    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "binaries", $arch, $FolderPath, "Python.Runtime.dll")
+    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "binaries", $Architecture, $Version, "Python.Runtime.dll")
     [System.Reflection.Assembly]::LoadFrom($Runtime) | Out-Null
 }
 
 function Use-Python {
     param(
         [ScriptBlock]$Script,
-        [ValidateSet("v2", "v3")]
-        $Version = "v3"
+        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
+        $Version = "v3.7"
     )
 
     Import-PythonRuntime -Version $Version
@@ -57,12 +53,32 @@ function Invoke-Python {
     [Python.Runtime.PythonEngine]::Exec($Code)
 }
 
-function Set-PythonModule {
+function Install-PythonModule {
+    param(
+        $Name,
+        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
+        $Version = "v3.7"
+    )
+
+    Invoke-Pip -Action "install" -Name $Name -Version $Version
+}
+
+function Uninstall-PythonModule {
+    param(
+        $Name,
+        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
+        $Version = "v3.7"
+    )
+
+    Invoke-Pip -Action "uninstall" -Name $Name -Version $Version
+}
+
+function Invoke-Pip {
     param(
         $Action,
         $Name,
-        [ValidateSet("v2", "v3")]
-        $Version = "v3"
+        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
+        $Version = "v3.7"
     )
 
     Use-Python -Version $Version -Script {

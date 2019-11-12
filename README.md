@@ -12,8 +12,7 @@ Install-Module snek
 
 ## Requirements
 
-* Python v2.7 or v3.6 (defaults to python 3.6)
-* for Python v2.7 just add -Version v2
+* Python v2.7, v3.5, v3.6, or v3.7 (defaults to python 3.7)
 
 ## Functions 
 
@@ -21,9 +20,10 @@ Install-Module snek
 * Invoke-Python
 * Import-PythonRuntime
 * Import-PythonModule
-* Set-PythonModule
+* Install-PythonModule
+* Uninstall-PythonModule
 
-### Invoke Python Code (v3.6)
+### Invoke Python Code (v3.7)
 
 ```
 PS > Use-Python { 
@@ -38,7 +38,7 @@ hi!
 ```
 PS > Use-Python { 
     Invoke-Python -Code "print('hi!')" 
-} -Version v2
+} -Version v2.7
     
 hi!
 ```
@@ -54,7 +54,7 @@ Use-Python {
 
     [float]$np.sin(5)
     [float]($np.cos(5) + $np.sin(5))
-} -Version v3
+} -Version v3.7
 ```
 
 Output
@@ -67,14 +67,14 @@ Output
 
 ### Manage pip
 
-Format is `Set-PythonModule <pip command> <package>`
+Format is `Install-PythonModule <package>`
 
 ```
-PS> Set-PythonModule install requests
+PS> Install-PythonModule requests
 ```
 
 Or similarly:
 
 ```
-PS> Set-PythonModule uninstall requests
+PS> Uninstall-PythonModule requests
 ```
