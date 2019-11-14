@@ -37,23 +37,87 @@ function Use-Python {
     }
 }
 
-function Import-PythonModule {
+function Import-PythonPackage {
     param(
         $Name
     )
 
-    [Python.Runtime.Py]::Import($Name)
+    # Wrap in an ArrayList so PowerShell doesn't try to unwind the dynamic because it will throw
+    # an exception
+    $ar = [System.Collections.ArrayList]::new()
+    $ar.add([Python.Runtime.Py]::Import($Name)) | Out-Null
+    $ar
 }
 
 function Invoke-Python {
     param(
-        $Code
+        [Parameter(Mandatory)]
+        $Code,
+        [Parameter()]
+        [type]$ReturnType
     )
 
-    [Python.Runtime.PythonEngine]::Exec($Code)
+    if ($ReturnType)
+    {
+        if ($null -eq $Scope)
+        {
+            [Python.Runtime.PythonEngine]::Eval($Code) -as $ReturnType
+        }
+        else 
+        {
+            $Scope.Eval($Code) -as $ReturnType
+        }
+        
+    }
+    else 
+    {
+        if ($null -eq $Scope)
+        {
+            [Python.Runtime.PythonEngine]::Exec($Code)
+        }
+        else 
+        {
+            $Scope.Exec($Code)
+        }
+    }
 }
 
-function Install-PythonModule {
+function Use-PythonScope {
+    param(
+        [Parameter(Mandatory)]
+        [scriptblock]$ScriptBlock
+    )
+
+    $Scope = $null
+    try 
+    {
+        $Scope = [Python.Runtime.Py]::CreateScope()
+        $ScriptBlock.Invoke()
+    }
+    finally 
+    {
+        $Scope.Dispose()
+    }
+}
+
+function Set-PythonVariable {
+    param(
+        [Parameter(Mandatory)]
+        $Name,
+        [Parameter(Mandatory)]
+        $Value
+    )
+
+    if ($null -eq $Scope)
+    {
+        throw "Set-PythonVariable must be called within a Use-PythonScope" 
+    }
+
+    $PyObject = [Python.Runtime.ConverterExtension]::ToPython($Value)
+    $Scope.Set($Name, $PyObject)
+}
+
+function Install-PythonPackage {
     param(
         $Name,
         [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
@@ -63,7 +127,7 @@ function Install-PythonModule {
     Invoke-Pip -Action "install" -Name $Name -Version $Version
 }
 
-function Uninstall-PythonModule {
+function Uninstall-PythonPackage {
     param(
         $Name,
         [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
@@ -82,7 +146,7 @@ function Invoke-Pip {
     )
 
     Use-Python -Version $Version -Script {
-        Invoke-Python -Code "import pip._internal
-pip._internal.main([`"$Action`", `"$Name`"])"
+        Invoke-Python -Code "import subprocess
+subprocess.check_call(['python', '-m', 'pip', '$Action', '$Name'])"
     }
 }

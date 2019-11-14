@@ -22,11 +22,13 @@ Install-Module snek
 * Import-PythonModule
 * Install-PythonModule
 * Uninstall-PythonModule
+* Use-PythonScope
+* Set-PythonVariable
 
 ### Invoke Python Code (v3.7)
 
 ```
-PS > Use-Python { 
+Use-Python { 
     Invoke-Python -Code "print('hi!')" 
 }
     
@@ -41,6 +43,16 @@ PS > Use-Python {
 } -Version v2.7
     
 hi!
+```
+
+### Returning A Value from Python to PowerShell
+
+Due to the use of `dynamic` the type must be cast to the expected type so you need to specify the `-ReturnType` parameter to do so.
+
+```
+Use-Python {
+    Invoke-Python "'Hello'" -ReturnType ([String])
+}
 ```
 
 ### Imports the `numpy` Python module and does some math
@@ -70,11 +82,44 @@ Output
 Format is `Install-PythonModule <package>`
 
 ```
-PS> Install-PythonModule requests
+Install-PythonModule requests
 ```
 
 Or similarly:
 
 ```
-PS> Uninstall-PythonModule requests
+Uninstall-PythonModule requests
+```
+
+### Using Scopes
+
+You can use Python scopes to string together multiple `Invoke-Python` calls or to pass in variables from PowerShell. 
+
+```
+Use-Python {
+    Use-PythonScope {
+        Invoke-Python -Code "import sys" 
+        Invoke-Python -Code "sys.version" -ReturnType ([string]) 
+    }
+}
+```
+
+### Passing a .NET Object to Python
+
+```
+class Person {
+    [string]$FirstName
+    [string]$LastName
+}
+
+Use-Python {
+    Use-PythonScope {
+        $Person = [Person]::new()
+        $Person.FirstName = "Adam"
+        $Person.LastName = "Driscoll"
+        Set-PythonVariable -Name "person" -Value $Person
+
+        Invoke-Python -Code "person.FirstName + ' ' + person.LastName" -ReturnType ([string])
+    }
+}
 ```
