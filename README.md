@@ -19,9 +19,9 @@ Install-Module snek
 * Use-Python
 * Invoke-Python
 * Import-PythonRuntime
-* Import-PythonModule
-* Install-PythonModule
-* Uninstall-PythonModule
+* Import-PythonPackage
+* Install-PythonPackage
+* Uninstall-PythonPackage
 * Use-PythonScope
 * Set-PythonVariable
 
@@ -79,16 +79,16 @@ Output
 
 ### Manage pip
 
-Format is `Install-PythonModule <package>`
+Format is `Install-PythonPackage <package>`
 
 ```
-Install-PythonModule requests
+Install-PythonPackage requests
 ```
 
 Or similarly:
 
 ```
-Uninstall-PythonModule requests
+Uninstall-PythonPackage requests
 ```
 
 ### Using Scopes
