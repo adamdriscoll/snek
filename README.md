@@ -61,7 +61,7 @@ Access methods of modules directly!
 
 ```
 Use-Python {
-    $np = Import-PythonModule "numpy"
+    $np = Import-PythonPackage "numpy"
     [float]$np.cos($np.pi * 2)
 
     [float]$np.sin(5)
