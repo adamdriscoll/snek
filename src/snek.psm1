@@ -24,7 +24,7 @@ function Import-PythonRuntime {
         }
     }
 
-    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "binaries", "Python.Runtime.dll")
+    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "Python.Runtime.dll")
     [System.Reflection.Assembly]::LoadFrom($Runtime) | Out-Null
 
     [Python.Runtime.Runtime]::PythonDLL = $pythonDll
