@@ -12,7 +12,7 @@ Install-Module snek
 
 ## Requirements
 
-* Python v2.7, v3.5, v3.6, or v3.7 (defaults to python 3.7)
+* Python v3.7, v3.8, v3.9, v3.10, or v3.11 (defaults to python 3.11)
 
 ## Functions 
 
@@ -25,7 +25,7 @@ Install-Module snek
 * Use-PythonScope
 * Set-PythonVariable
 
-### Invoke Python Code (v3.7)
+### Invoke Python Code (v3.11)
 
 ```
 Use-Python { 
@@ -35,12 +35,12 @@ Use-Python {
 hi!
 ```
 
-### Invoke Python Code (v2.7)
+### Invoke Python Code (v3.7)
 
 ```
 PS > Use-Python { 
     Invoke-Python -Code "print('hi!')" 
-} -Version v2.7
+} -Version v3.7
     
 hi!
 ```

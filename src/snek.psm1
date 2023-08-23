@@ -1,38 +1,34 @@
 
 function Import-PythonRuntime {
     param(
-        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
-        $Version = "v3.7"
-        )
+        [ValidateSet("v3.7", 'v3.8', 'v3.9', 'v3.10', 'v3.11')]
+        $Version = "v3.11"
+    )
 
-    $Architecture = 'x64'
-    if ([IntPtr]::Size -eq 4)
-    {
-        $Architecture = 'x86'
-    }
-
-    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "binaries", $Architecture, $Version, "Python.Runtime.dll")
+    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "binaries", "Python.Runtime.dll")
     [System.Reflection.Assembly]::LoadFrom($Runtime) | Out-Null
+
+    [Python.Runtime.Runtime]::PythonDLL = "python$($Version.Replace('v', '').Replace('.', '')).dll"
+    [Python.Runtime.PythonEngine]::Initialize()  | Out-Null
+    [Python.Runtime.PythonEngine]::BeginAllowThreads() | Out-Null
 }
 
 function Use-Python {
     param(
         [ScriptBlock]$Script,
-        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
-        $Version = "v3.7"
+        [ValidateSet("v3.7", 'v3.8', 'v3.9', 'v3.10', 'v3.11')]
+        $Version = "v3.11"
     )
 
     Import-PythonRuntime -Version $Version
 
     $runtime = $null
-    try 
-    {
+    try {
         $runtime = [Python.Runtime.Py]::Gil()
 
         $Script.Invoke()
     } 
-    Finally 
-    {
+    Finally {
         $runtime.Dispose()
     }
 }
@@ -57,26 +53,20 @@ function Invoke-Python {
         [type]$ReturnType
     )
 
-    if ($ReturnType)
-    {
-        if ($null -eq $Scope)
-        {
+    if ($ReturnType) {
+        if ($null -eq $Scope) {
             [Python.Runtime.PythonEngine]::Eval($Code) -as $ReturnType
         }
-        else 
-        {
+        else {
             $Scope.Eval($Code) -as $ReturnType
         }
         
     }
-    else 
-    {
-        if ($null -eq $Scope)
-        {
+    else {
+        if ($null -eq $Scope) {
             [Python.Runtime.PythonEngine]::Exec($Code)
         }
-        else 
-        {
+        else {
             $Scope.Exec($Code)
         }
     }
@@ -89,13 +79,11 @@ function Use-PythonScope {
     )
 
     $Scope = $null
-    try 
-    {
+    try {
         $Scope = [Python.Runtime.Py]::CreateScope()
         $ScriptBlock.Invoke()
     }
-    finally 
-    {
+    finally {
         $Scope.Dispose()
     }
 }
@@ -108,8 +96,7 @@ function Set-PythonVariable {
         $Value
     )
 
-    if ($null -eq $Scope)
-    {
+    if ($null -eq $Scope) {
         throw "Set-PythonVariable must be called within a Use-PythonScope" 
     }
 
@@ -120,8 +107,8 @@ function Set-PythonVariable {
 function Install-PythonPackage {
     param(
         $Name,
-        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
-        $Version = "v3.7"
+        [ValidateSet("v3.7", 'v3.8', 'v3.9', 'v3.10', 'v3.11')]
+        $Version = "v3.11"
     )
 
     Invoke-Pip -Action "install" -Name $Name -Version $Version
@@ -130,8 +117,8 @@ function Install-PythonPackage {
 function Uninstall-PythonPackage {
     param(
         $Name,
-        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
-        $Version = "v3.7"
+        [ValidateSet("v3.7", 'v3.8', 'v3.9', 'v3.10', 'v3.11')]
+        $Version = "v3.11"
     )
 
     Invoke-Pip -Action "uninstall" -Name $Name -Version $Version
@@ -141,8 +128,8 @@ function Invoke-Pip {
     param(
         $Action,
         $Name,
-        [ValidateSet("v2.7", "v3.5", "v3.6", "v3.7")]
-        $Version = "v3.7"
+        [ValidateSet("v3.7", 'v3.8', 'v3.9', 'v3.10', 'v3.11')]
+        $Version = "v3.11"
     )
 
     Use-Python -Version $Version -Script {
