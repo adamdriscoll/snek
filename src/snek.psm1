@@ -6,30 +6,32 @@ function Import-PythonRuntime {
         [Parameter()]
         $PythonDLL
     )
+	
+	if (-not ([System.Management.Automation.PSTypeName]'Python.Runtime.Py').Type) {
+		if (-not $PythonDLL) {
+			if ($IsCoreCLR) {
+				if ($IsWindows) {
+					$pythonDll = "python$($Version.Replace('v', '').Replace('.', '')).dll"
+				}
+				elseif ($IsLinux) {
+					$pythonDll = "libpython$($Version.Replace('v', '')).so"
+				}
+				else {
+					$pythonDll = "libpython$($Version.Replace('v', '')).dylib"
+				}
+			}
+			else {
+				$pythonDll = "python$($Version.Replace('v', '').Replace('.', '')).dll"
+			}
+		}
 
-    if (-not $PythonDLL) {
-        if ($IsCoreCLR) {
-            if ($IsWindows) {
-                $pythonDll = "python$($Version.Replace('v', '').Replace('.', '')).dll"
-            }
-            elseif ($IsLinux) {
-                $pythonDll = "libpython$($Version.Replace('v', '')).so"
-            }
-            else {
-                $pythonDll = "libpython$($Version.Replace('v', '')).dylib"
-            }
-        }
-        else {
-            $pythonDll = "python$($Version.Replace('v', '').Replace('.', '')).dll"
-        }
-    }
+		$Runtime = [System.IO.Path]::Combine($PSScriptRoot, "Python.Runtime.dll")
+		[System.Reflection.Assembly]::LoadFrom($Runtime) | Out-Null
 
-    $Runtime = [System.IO.Path]::Combine($PSScriptRoot, "Python.Runtime.dll")
-    [System.Reflection.Assembly]::LoadFrom($Runtime) | Out-Null
-
-    [Python.Runtime.Runtime]::PythonDLL = $pythonDll
-    [Python.Runtime.PythonEngine]::Initialize()  | Out-Null
-    [Python.Runtime.PythonEngine]::BeginAllowThreads() | Out-Null
+		[Python.Runtime.Runtime]::PythonDLL = $pythonDll
+		[Python.Runtime.PythonEngine]::Initialize()  | Out-Null
+		[Python.Runtime.PythonEngine]::BeginAllowThreads() | Out-Null
+	}
 }
 
 function Use-Python {
