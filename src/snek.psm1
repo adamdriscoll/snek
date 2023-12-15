@@ -29,7 +29,6 @@ function Import-PythonRuntime {
 
     [Python.Runtime.Runtime]::PythonDLL = $pythonDll
     [Python.Runtime.PythonEngine]::Initialize()  | Out-Null
-    [Python.Runtime.PythonEngine]::BeginAllowThreads() | Out-Null
 }
 
 function Use-Python {
@@ -40,17 +39,23 @@ function Use-Python {
         [Parameter()]
         $PythonDLL
     )
-
-    Import-PythonRuntime -Version $Version
-
-    $runtime = $null
     try {
-        $runtime = [Python.Runtime.Py]::Gil()
+        Import-PythonRuntime -Version $Version
+        $state = [Python.Runtime.PythonEngine]::BeginAllowThreads()
+        $runtime = $null
+        try {
+            $runtime = [Python.Runtime.Py]::Gil()
 
-        $Script.Invoke()
-    } 
-    Finally {
-        $runtime.Dispose()
+            $Script.Invoke()
+        } 
+        Finally {
+            $runtime.Dispose()
+        }
+        [Python.Runtime.PythonEngine]::EndAllowThreads($state)
+        [Python.Runtime.PythonEngine]::Shutdown()
+    } catch {
+        Write-Error $_
+        [Python.Runtime.PythonEngine]::Shutdown()
     }
 }
 
